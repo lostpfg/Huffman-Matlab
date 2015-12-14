@@ -1,8 +1,8 @@
 # Huffman-Matlab
 Custom Huffman code dictionary generator,encoder and decoder functions
 
-# Main Functions
-huffmandict_( alphabet, prob, debug )
+### Main Functions
+##### huffmandict_( alphabet, prob, debug )
 Based on the probability(prob) of each symbol(alphabet), generates the Huffman codebook.
 Example of usage:
 
@@ -16,7 +16,7 @@ Command Window (Output)
     code: {'110'  '0'  '111'  '100'  '101'}
 
  
-huffmanenco_( sig, dict, debug )
+##### huffmanenco_( sig, dict, debug )
 Based on the huffman codebook from huffmandict_(dict) encodes the input signal(sig).
 Example of usage: 
 
@@ -27,4 +27,4 @@ Example of usage:
 
 Command Window (Output)
  
-   10101101110100100
+    10101101110100100
