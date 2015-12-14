@@ -13,7 +13,7 @@ Example of usage:
 Command Window (Output)
 
     symbol: {'x'  'y'  'z'  'w'  'k'}
-    code: {'110'  '0'  '111'  '100'  '101'}
+    code:   {'110'  '0'  '111'  '100'  '101'}
 
  
 ##### huffmanenco_( sig, dict, debug )
