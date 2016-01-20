@@ -1,5 +1,7 @@
 # Huffman-Matlab
 Custom Huffman code dictionary generator,encoder and decoder functions
+All functions support debug mode, which creates a log file of execution
+with several infos about each execution.
 
 ### Main Functions
 ##### huffmandict_( alphabet, prob, debug )
@@ -29,7 +31,7 @@ Command Window (Output)
     10101101110100100
     
 ##### huffmadeco_( sig, dict, debug )
-Based on the huffman codebook from huffmandict_, encodes the input signal.
+Based on the huffman codebook from huffmandict_, decodes the input signal.
 Example of usage: 
 
     sig = [ 10101101110100100 ]; % Εncoded signal.
