@@ -20,7 +20,7 @@ function dict = huffmandict_( alphabet, prob, debug )
 %   ----------------------------------------------------------------------- 
 % 
 %   --- Error checking ------------------------
-
+% 
     % Check if the probability vector is of type double
     if ( ~strcmp( class(prob), 'double') )
         error('The probability vector must be of type double')
@@ -40,46 +40,48 @@ function dict = huffmandict_( alphabet, prob, debug )
     if( length(alphabet) ~= length(prob) )
         error('Alphabet and probability vectors must have the same length');
     end
-    
+%     
 %   --- /Error checking ------------------------
 % 
-%   --- Main Function   ------------------------
-    % Check for debug argument
-    debug_ = 0; % Global Variable
-    if ( nargin > 2 && debug == 1 )
+    % Check for debug.
+    debug_ = 0; % Global Variable.
+    if ( nargin > 2 && debug )
         debug_ = 1;
         loop_ = 1;
-        timestamp = get_timestamp;
-        timestamp = strcat(timestamp, 's_huffmandict_.txt'); 
-        fileID = fopen(timestamp,'w'); % Open the bebug file.
+        fileID = fopen(strcat(get_timestamp, '_huffmandict_.txt'),'w'); % Create the log file.
         fprintf(fileID,'Debug Log - huffmandict_\n----------------------------\n');
     end
-    % Initialize working vectors
+    % Initialize working space.
     for i = 1:length( prob )    % For each probability.
-        codewords{i} = '';      % Create an empty codeword string.
+        codewords{i} = '';      % Create an empty codeword.
         symbol{i} = i;          % Index the codeword.
-        if ( debug_ == 1 )
+        if debug_
             word(i) = alphabet(i);  % Append it's symbol.
         end
     end
-    
+% 
+%   --- /Error checking ------------------------
+%
+%   --- Main Function   ------------------------
+% 
+    % Coding state.     
     while ( prob ~= 1 ) % Loop, until we reach the root.
         % Sort the probabilities at every loop.
-        [~, arr] = sort(prob);  % Arrangement(arr) of the sorted probabilities.
-        % Find the index of the two sets to be merged.
-        last = arr(1);  % Index of the lowest probability.
-        next = arr(2);  % Index of the second lowest probability.
+        [~, arr] = sort(prob);  % Get arrangement of the sorted probabilities.
+        % Get the index of the two sets to be merged.
+        last = arr(1);
+        next = arr(2);
         % Get their main index or indexes.
-        right_set = symbol{last};  % Get the lowest set.
-        left_set  = symbol{next};  % Get the second lowest set.
+        right_set = symbol{last};
+        left_set  = symbol{next};
         % Get their probabilities.
         right_probability = prob(last); 
         left_probability  = prob(next); 
-        % Create the new set.
+        % Append them in a new set.
         merged_set = [right_set, left_set]; 
-        new_prob   = right_probability + left_probability; % Merge the probabilities.
+        new_prob   = right_probability + left_probability;
         % Debug logging.
-        if ( debug_ == 1 )
+        if debug_
             merged_word = strcat(word{last},word{next});
             fprintf(fileID,'Loop Count : %d\n',loop_);
             fprintf(fileID,'\tMerged Symbols {"%s","%s"}-->{"%s"}\n',word{last},word{next},merged_word);
@@ -89,25 +91,25 @@ function dict = huffmandict_( alphabet, prob, debug )
             loop_ = loop_ + 1;  
         end
         % Update probability and symbol sets
-        symbol(arr(1:2)) = '';  % Remove merged entries from the initial loop set.
-        prob(arr(1:2))   = '';  % Remove also  the merged probabilities.
-        symbol = [symbol merged_set]; % Update symbols set.
-        prob   = [prob new_prob];     % Update probabilities set.       
+        symbol(arr(1:2)) = '';
+        prob(arr(1:2))   = '';
+        symbol = [symbol merged_set];
+        prob   = [prob new_prob];     
         % Get the updated codeword.
         codewords = append_(codewords,right_set,'1');
         codewords = append_(codewords,left_set,'0');
     end
     % Output structure {symbol,codewords}.
-    dict.symbol=alphabet; dict.code=codewords;
+    dict.symbol = alphabet; dict.code = codewords;
     % Debug logging.
-    if ( debug_ == 1 )
+    if debug_
         fprintf(fileID,'Compression Code :\n----------------------------\n');
         for i = 1:length(dict.symbol)
             fprintf(fileID,'\t{"%s"}-->{"%s"}\n',dict.symbol{i},dict.code{i});
         end
         fclose(fileID);
     end
-    
+%
 %   --- /Main Function   ------------------------
 end
 % 

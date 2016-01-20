@@ -30,11 +30,10 @@ function deco = huffmandeco_( sig, dict , debug )
 %    
 %    See also HUFFMANDICT_, HUFFMANENCO_.
 % 
-%    References:
 %   ----------------------------------------------------------------------- 
 % 
 %   --- Error checking ------------------------
-
+% 
     % Check if the input signal is a vector
     [m,n] = size(sig);
     if ( m ~= 1 && n ~= 1)
@@ -45,23 +44,25 @@ function deco = huffmandeco_( sig, dict , debug )
     if ( ~isstruct(dict) )
         error('The input dictionary must be a struct.');
     end
-
+% 
 %   --- /Error checking ------------------------
-
+% 
+%   --- Main Function   ------------------------
+% 
     % Check for debug argument
     debug_ = 0; % Global Variable
     if ( nargin > 2 && debug == 1 )
         debug_ = 1;
-        timestamp = get_timestamp;
-        timestamp = strcat(timestamp, 's_huffmandeco_.txt'); 
-        fileID = fopen(timestamp,'w'); % Open the bebug file.
+        fileID = fopen(strcat(get_timestamp, '_huffmandeco_.txt'),'w'); % Open the bebug file.
         fprintf(fileID,'Debug Log - huffmanenco_\n----------------------------\n');
         fprintf(fileID,'\nInput Signal :\n\t');
         for i = 1:length(sig)
             fprintf(fileID,'%s',sig(i));
         end        
     end
-%   --- Main Function   ------------------------
+    if debug_
+        fprintf(fileID,'\n\nDecodding each symbol :\n----------------------------\n');
+    end
     deco = []; % Output signal vector initialize.
     sig_ = sig;
     codepos_ = 1;
@@ -78,6 +79,9 @@ function deco = huffmandeco_( sig, dict , debug )
                 codepos_ = codepos_ + 1;   % Match second bit(char).
                 temp_ = sig_(codepos_);    % Get first char 
             else % Found the symbol
+                if ( debug_ == 1 )
+                    fprintf(fileID,'\tCodeword {"%s"}.\n\t\tFound symbol "%s" after %d iterations.\n', dictb.code{1},dictb.symbol{1},codepos_); % Write encryption to the bebug file.
+                end
                 codepos_ = 1; % Reset position.
                 sig_ = sig_(length(dictb.code{1})+1:end); % Update the input signal.
                 break;
@@ -87,7 +91,7 @@ function deco = huffmandeco_( sig, dict , debug )
     end
     % Debug logging.
     if ( debug_ == 1 )
-        fprintf(fileID,'\n\nDecompresed Signal :\n\t'); % Write encryption to the bebug file.
+        fprintf(fileID,'----------------------------\n\nDecompresed Signal :\n\t'); % Write encryption to the bebug file.
         for i = 1:length(deco)
             fprintf(fileID,'%s',deco{i});
         end

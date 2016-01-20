@@ -48,51 +48,52 @@ function enco = huffmanenco_( sig, dict, debug )
     end
 
 %   --- /Error checking ------------------------
-
-    % Check for debug argument
+%    
+%   --- Main Function   ------------------------
+% 
+    % Check for debug.
     debug_ = 0; % Global Variable
     if ( nargin > 2 && debug == 1 )
         debug_ = 1;
-        timestamp = get_timestamp;
-        timestamp = strcat(timestamp, 's_huffmanenco_.txt'); 
-        fileID = fopen(timestamp,'w'); % Open the bebug file.
+        fileID = fopen(strcat(get_timestamp, '_huffmanenco_.txt'),'w'); % Open the bebug file.
         fprintf(fileID,'Debug Log - huffmanenco_\n----------------------------\n');
         fprintf(fileID,'\nInput Signal :\n\t');
         for i = 1:length(sig)
-            fprintf(fileID,'%s',sig{i});
+            fprintf(fileID,'%s',sig(i));
         end        
     end
-    
-% --- Main Function   ------------------------
-
-    dictLength = length(dict.code); % Pre-compute for speed.
+    % Encoding state.
+    dictLength = length(dict.code);
+    if debug_
+        fprintf(fileID,'\n\nEndoding each symbol :\n----------------------------\n');
+    end
     enco = ''; % Empty encoded signal (char).
-    while( ~isempty(sig) ) % Loop for each signal value
+    while( ~isempty(sig) ) % Loop for each signal value.
         tempcode = ''; % Empty signal value (char).
         for j = 1 : dictLength 
             % Search sequentially through the dictionary to
             % find the proper code for the given signal.
-             if( strcmp(sig{1},dict.symbol{j}) ) % If there is a match.
+             if( strcmp(sig(1),dict.symbol{j}) ) % If there is a match.
                  tempcode = dict.code{j};
+                 fprintf(fileID,'\tSymbol %s : %s\n',sig(1),dict.code{j}); % Write encryption to the bebug file.
                  break;
              end
         end
-        if ( isempty(tempcode) ) % Error checking.
-            sig{1}
+        if isempty(tempcode) % Error checking.
             error('The Huffman dictionary provided does not have the codes for all the input signals.');
         end        
         enco = strcat( enco,tempcode ); % Append the code to the encryption message.
         sig = sig(2:end); % Update the signal vector.
     end  
     
-    if ( debug_ == 1 )
-        fprintf(fileID,'\n\nCompression Code :\n\t'); % Write encryption to the bebug file.
+    if debug_
+        fprintf(fileID,'----------------------------\n\n\nCompression Code :\n\t'); % Write encryption to the bebug file.
         for i = 1:length(enco)
             fprintf(fileID,'%s',enco(i));
         end
         fclose(fileID); % Close the bebug file.
     end
-    
+%     
 % --- /Main Function   ------------------------
 end
 % 
