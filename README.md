@@ -3,12 +3,12 @@ Custom Huffman code dictionary generator,encoder and decoder functions
 
 ### Main Functions
 ##### huffmandict_( alphabet, prob, debug )
-Based on the probability(prob) of each symbol(alphabet), generates the Huffman codebook.
+Based on the probability of each symbol, generates the Huffman codebook.
 Example of usage:
 
-    alphabet = {'x' 'y' 'z' 'w' 'k'}     % Alphabet vector                               
-    prob     = [0.1 0.6 0.05 0.15 0.10]  % Probability vector              
-    dict     = huffmandict(alphabet,prob, 0)  
+    alphabet = {'x' 'y' 'z' 'w' 'k'}         % Alphabet vector.                               
+    prob     = [0.1 0.6 0.05 0.15 0.10]      % Probability vector.     
+    dict     = huffmandict(alphabet,prob, 0) % Set 0->1, creates log file. 
 
 Command Window (Output)
 
@@ -17,14 +17,25 @@ Command Window (Output)
 
  
 ##### huffmanenco_( sig, dict, debug )
-Based on the huffman codebook from huffmandict_(dict) encodes the input signal(sig).
+Based on the huffman codebook from huffmandict_, encodes the input signal.
 Example of usage: 
 
-    % Signal of valid letters.
-    sig = [ 'k'    'y'    'x'    'z'    'y'    'w'    'w' ];
+    sig = [ 'k';'y';'x';'z';'y';'w';'w' ]; % Signal of valid letters.
     % Encode the signal using the Huffman code dictionary.
-    sig_encoded = huffmanenco_(sig,dict)
+    sig_encoded = huffmanenco_( sig, dict, 0 ) % Set 0->1, creates log file.
 
 Command Window (Output)
  
     10101101110100100
+    
+##### huffmadeco_( sig, dict, debug )
+Based on the huffman codebook from huffmandict_, encodes the input signal.
+Example of usage: 
+
+    sig = [ 10101101110100100 ]; % Εncoded signal.
+    % Encode the signal using the Huffman code dictionary.
+    sig_encoded = huffmanenco_( sig, dict, 0 )
+
+Command Window (Output)
+ 
+    'k'    'y'    'x'    'z'    'y'    'w'    'w'
