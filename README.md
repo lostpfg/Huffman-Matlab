@@ -34,7 +34,7 @@ Example of usage:
 
     sig = [ 10101101110100100 ]; % Εncoded signal.
     % Encode the signal using the Huffman code dictionary.
-    sig_encoded = huffmanenco_( sig, dict, 0 )
+    sig_decoded = huffmanenco_( sig, dict, 0 )
 
 Command Window (Output)
  
